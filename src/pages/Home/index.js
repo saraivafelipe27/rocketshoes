@@ -1,91 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdShoppingCart } from 'react-icons/md';
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSJ7G0xjJX-6QlCyT2g8Q05Ck091ms3mAvCv1LfHL9iOTran4dAqRW3Q0mIb4hp9w6BHfFnbzccglIh3Fw71gbpjrC_vHAXcV6-1rx5oYtPHLAIjqzuWDWn&usqp=CAE"
-          alt="Tenis"
-        />
-        <strong>Tênis muito bonito</strong>
-        <span>R$149,90</span>
+export default class Home extends Component {
+  state = {
+    products: [],
+  };
 
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#FFF" /> 3
-          </div>
+  async componentDidMount() {
+    const response = await api.get('products');
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-      <li>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSJ7G0xjJX-6QlCyT2g8Q05Ck091ms3mAvCv1LfHL9iOTran4dAqRW3Q0mIb4hp9w6BHfFnbzccglIh3Fw71gbpjrC_vHAXcV6-1rx5oYtPHLAIjqzuWDWn&usqp=CAE"
-          alt="Tenis"
-        />
-        <strong>Tênis muito bonito</strong>
-        <span>R$149,90</span>
+    const data = response.data.map((product) => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
 
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#FFF" /> 3
-          </div>
+    this.setState({ products: data });
+  }
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-      <li>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSJ7G0xjJX-6QlCyT2g8Q05Ck091ms3mAvCv1LfHL9iOTran4dAqRW3Q0mIb4hp9w6BHfFnbzccglIh3Fw71gbpjrC_vHAXcV6-1rx5oYtPHLAIjqzuWDWn&usqp=CAE"
-          alt="Tenis"
-        />
-        <strong>Tênis muito bonito</strong>
-        <span>R$149,90</span>
+  render() {
+    const { products } = this.state;
 
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#FFF" /> 3
-          </div>
+    return (
+      <ProductList>
+        {products.map((product) => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
+            <strong>{product.title}</strong>
+            <span>{product.priceFormatted}</span>
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-      <li>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSJ7G0xjJX-6QlCyT2g8Q05Ck091ms3mAvCv1LfHL9iOTran4dAqRW3Q0mIb4hp9w6BHfFnbzccglIh3Fw71gbpjrC_vHAXcV6-1rx5oYtPHLAIjqzuWDWn&usqp=CAE"
-          alt="Tenis"
-        />
-        <strong>Tênis muito bonito</strong>
-        <span>R$149,90</span>
+            <button type="button">
+              <div>
+                <MdShoppingCart size={16} color="#FFF" /> 3
+              </div>
 
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#FFF" /> 3
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-      <li>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSJ7G0xjJX-6QlCyT2g8Q05Ck091ms3mAvCv1LfHL9iOTran4dAqRW3Q0mIb4hp9w6BHfFnbzccglIh3Fw71gbpjrC_vHAXcV6-1rx5oYtPHLAIjqzuWDWn&usqp=CAE"
-          alt="Tenis"
-        />
-        <strong>Tênis muito bonito</strong>
-        <span>R$149,90</span>
-
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#FFF" /> 3
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+              <span>ADICIONAR AO CARRINHO</span>
+            </button>
+          </li>
+        ))}
+      </ProductList>
+    );
+  }
 }
